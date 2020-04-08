@@ -1,0 +1,45 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "demo-master-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/demoMaster/DemoMasterApplicationCustomizer.js",
+          "manifest": "./src/extensions/demoMaster/DemoMasterApplicationCustomizer.manifest.json"
+        }
+      ]
+    },
+    "report-links-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/reportLinks/ReportLinksWebPart.js",
+          "manifest": "./src/webparts/reportLinks/ReportLinksWebPart.manifest.json"
+        }
+      ]
+    },
+    "what-we-do-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/whatWeDo/WhatWeDoWebPart.js",
+          "manifest": "./src/webparts/whatWeDo/WhatWeDoWebPart.manifest.json"
+        }
+      ]
+    },
+    "key-contacts-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/keyContacts/KeyContactsWebPart.js",
+          "manifest": "./src/webparts/keyContacts/KeyContactsWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "DemoMasterApplicationCustomizerStrings": "lib/extensions/demoMaster/loc/{locale}.js",
+    "ReportLinksWebPartStrings": "lib/webparts/reportLinks/loc/{locale}.js",
+    "WhatWeDoWebPartStrings": "lib/webparts/whatWeDo/loc/{locale}.js",
+    "KeyContactsWebPartStrings": "lib/webparts/keyContacts/loc/{locale}.js"
+  }
+}

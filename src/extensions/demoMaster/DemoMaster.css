@@ -1,0 +1,26 @@
+.topbar {
+    background-color: #01244C;
+    white-space: nowrap;
+    min-height: 55px;
+}
+
+.navitem {
+    float: left;
+    margin-top: 15px;
+}
+
+.navlink {
+    color: white;
+    text-decoration: none;
+    padding-right: .5rem;
+    padding-left: .5rem;    
+}
+
+.logo {
+    margin: 0px 30px;
+    float: left;
+}
+
+.makeithide {
+    display: none;
+}

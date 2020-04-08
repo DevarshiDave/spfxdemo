@@ -1,0 +1,43 @@
+@import '~office-ui-fabric-react/dist/sass/References.scss';
+
+.card-lg-container {    
+    border-radius: 15px;
+    background-color: #F6F5F5;
+    font-size: small;
+    margin-bottom: 20px;
+
+    .row {
+        @include ms-Grid-row;
+        @include ms-fontColor-white;
+    }
+    
+    .column {
+        @include ms-Grid-col;
+        @include ms-md12;
+        @include ms-lg12;        
+        padding: 15px;
+    }
+    
+    .noPadding {
+        padding: 0px 10px !important;
+    }
+
+    .card-image > img {
+        width: 100%;
+        height: 160px;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+    }
+
+    .card-title {
+        color: #4987BE;
+        font-weight: bold;
+        padding-left: 10px; 
+    }
+    
+    .card-desc {
+        padding-top:15px;
+        color: black;
+        padding-left: 10px;
+    }
+}
