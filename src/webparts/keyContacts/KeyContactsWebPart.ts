@@ -10,12 +10,21 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'KeyContactsWebPartStrings';
 import KeyContacts from './components/KeyContacts';
 import { IKeyContactsProps } from './components/IKeyContactsProps';
+import { sp } from "@pnp/sp";
 
 export interface IKeyContactsWebPartProps {
   description: string;
 }
 
 export default class KeyContactsWebPart extends BaseClientSideWebPart <IKeyContactsWebPartProps> {
+
+  protected onInit(): Promise<void> {
+    sp.setup({
+      spfxContext: this.context
+    });
+
+    return super.onInit();
+  }
 
   public render(): void {
     const element: React.ReactElement<IKeyContactsProps> = React.createElement(

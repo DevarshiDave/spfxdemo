@@ -21,7 +21,7 @@
     "description": { "default": "report-links description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "report-links"
+      "viewall": false
     }
   }]
 }

@@ -3,37 +3,57 @@ import styles from './ReportLinks.module.scss';
 import { IReportLinksProps } from './IReportLinksProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import CardSmall from './card-small/CardSmall';
+require("@pnp/logging");
+require("@pnp/common");
+require("@pnp/odata");
+import { sp } from "@pnp/sp/presets/all";
 
-export default class ReportLinks extends React.Component<IReportLinksProps, {}> {
-  private dummyData = [
-    { id: 1, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img1.jpg' },
-    { id: 2, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img2.jpg' },
-    { id: 3, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img3.jpg' },
-    { id: 4, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img1.jpg' },
-    { id: 5, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img2.jpg' },
-    { id: 6, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img3.jpg' },
-    { id: 7, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img1.jpg' },
-    { id: 8, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img2.jpg' },
-    { id: 9, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img3.jpg' },
-  ];
+export default class ReportLinks extends React.Component<IReportLinksProps, { items: any[] }> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: []
+    }
+
+    this.getItems();
+  }
+
   public render(): React.ReactElement<IReportLinksProps> {
-    return (
-      <div className={styles.reportLinks}>
-        <h2>Report Links
-          <a href="#" className={styles.viewAllLink}>View All</a>
-        </h2>
-        <div className={styles.row}>
-          {
-            this.dummyData.map((ele) => {
-              return (
-                <div className={styles["column-small"]}>
-                  <CardSmall id={ele.id} title={ele.title} description={ele.description} image={ele.image}></CardSmall>
-                </div>
-              )
-            })
-          }
+    const viewAllLink = this.props.viewall;
+    if (!viewAllLink) {
+      return (
+        <div className={styles.reportLinks}>
+          <h2>Report Links
+            <a href="#" className={styles.viewAllLink}>View All</a>
+          </h2>
+          <div className={styles.row}>
+            {
+              this.state.items.map((ele) => {
+                return (
+                  <div className={styles["column-small"]}>
+                    <CardSmall id={ele.ID} title={ele.Title} description={ele.description} image={ele.image ? ele.image.Url : ''}></CardSmall>
+                  </div>
+                )
+              })
+            }
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    else {
+      return (
+        <div className={styles.reportLinks}>
+          <h2>All Report Links</h2>
+        </div>
+      )
+    }
+  }
+
+  private getItems() {
+    sp.web.lists.getByTitle('Report Links').items.select('ID, Title, description, image').orderBy('Created', false).get().then((result: any[]) => {
+      this.setState({
+        items: result.slice(0, 9)
+      });
+    });
   }
 }

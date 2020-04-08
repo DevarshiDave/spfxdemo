@@ -3,28 +3,39 @@ import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneToggle
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 
 import * as strings from 'ReportLinksWebPartStrings';
 import ReportLinks from './components/ReportLinks';
 import { IReportLinksProps } from './components/IReportLinksProps';
+import { sp } from "@pnp/sp";
 
 export interface IReportLinksWebPartProps {
-  description: string;
+  viewall: boolean;
 }
 
 export default class ReportLinksWebPart extends BaseClientSideWebPart <IReportLinksWebPartProps> {
 
+  protected onInit(): Promise<void> {
+    sp.setup({
+      spfxContext: this.context
+    });
+
+    return super.onInit();
+  }
+
   public render(): void {
+    console.log('viewall', this.properties);
     const element: React.ReactElement<IReportLinksProps> = React.createElement(
       ReportLinks,
       {
-        description: this.properties.description
+        viewall: this.properties.viewall
       }
     );
-
+      
     ReactDom.render(element, this.domElement);
   }
 
@@ -47,7 +58,7 @@ export default class ReportLinksWebPart extends BaseClientSideWebPart <IReportLi
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
+                PropertyPaneToggle('viewall', {
                   label: strings.DescriptionFieldLabel
                 })
               ]

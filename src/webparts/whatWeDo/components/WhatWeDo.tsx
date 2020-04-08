@@ -3,16 +3,21 @@ import styles from './WhatWeDo.module.scss';
 import { IWhatWeDoProps } from './IWhatWeDoProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 import CardLarge from './card-large/CardLarge';
+require("@pnp/logging");
+require("@pnp/common");
+require("@pnp/odata");
+import { sp } from "@pnp/sp/presets/all";
 
-export default class WhatWeDo extends React.Component<IWhatWeDoProps, {}> {
-  private dummyData = [    
-    { id: 4, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img1.jpg' },
-    { id: 5, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img2.jpg' },
-    { id: 6, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img3.jpg' },
-    { id: 7, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img1.jpg' },
-    { id: 8, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img2.jpg' },
-    { id: 9, title: 'Lorem Ipsum is simply dum', description: 'Lorem ipsum is simply dummy text for priniting and typesetting industry. Lorem Ipsum is', image: 'https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/img3.jpg' },
-  ];
+export default class WhatWeDo extends React.Component<IWhatWeDoProps, { items: any[] }> {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: []
+    }
+
+    this.getItems();
+  }
 
   public render(): React.ReactElement<IWhatWeDoProps> {
     return (
@@ -20,10 +25,10 @@ export default class WhatWeDo extends React.Component<IWhatWeDoProps, {}> {
         <h2>What We Do</h2>
         <div className={styles.row}>
           {
-            this.dummyData.map((ele) => {
+            this.state.items.map((ele) => {
               return (
                 <div className={styles["column-half"]}>
-                  <CardLarge id={ele.id} title={ele.title} description={ele.description} image={ele.image}></CardLarge>
+                  <CardLarge id={ele.ID} title={ele.Title} description={ele.description} image={ele.image ? ele.image.Url : ''}></CardLarge>
                 </div>
               )
             })
@@ -31,5 +36,13 @@ export default class WhatWeDo extends React.Component<IWhatWeDoProps, {}> {
         </div>
       </div>
     );
+  }
+
+  private getItems() {
+    sp.web.lists.getByTitle('What we do').items.select('ID, Title, description, image').orderBy('Created', false).get().then((result: any[]) => {
+      this.setState({
+        items: result
+      });
+    });
   }
 }

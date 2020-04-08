@@ -1,3 +1,3 @@
 export interface IReportLinksProps {
-  description: string;
+  viewall: boolean;
 }

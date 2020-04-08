@@ -7,6 +7,11 @@ import { Dialog } from '@microsoft/sp-dialog';
 
 import * as strings from 'DemoMasterApplicationCustomizerStrings';
 require('./DemoMaster.css');
+require("@pnp/logging");
+require("@pnp/common");
+require("@pnp/odata");
+import { sp } from "@pnp/sp/presets/all";
+
 const LOG_SOURCE: string = 'DemoMasterApplicationCustomizer';
 
 /**
@@ -32,10 +37,15 @@ export default class DemoMasterApplicationCustomizer
   public onInit(): Promise<void> {
     // Wait for the placeholders to be created (or handle them being changed) and then render.
     this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders);
+    
     return Promise.resolve();
   }
 
   private _renderPlaceHolders(): void {
+    sp.setup({
+      spfxContext: this.context
+    });
+
     console.log("HelloWorldApplicationCustomizer._renderPlaceHolders()");
     console.log(
       "Available placeholders: ",
@@ -64,38 +74,10 @@ export default class DemoMasterApplicationCustomizer
               <a href="https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite">
                 <img src="https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/logo.jpg" />
               </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                People Analytics Home Page
-              </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                Report Links
-              </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                Key Contracts
-              </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                RCCL Documents
-              </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                Departments
-              </a>
-            </div>
-            <div class="navitem">
-              <a href="#" class="navlink">
-                Links
-              </a>
-            </div>
+            </div>            
           </div>`;
+
+        this.getNavItems();
       }
     }
 
@@ -108,5 +90,21 @@ export default class DemoMasterApplicationCustomizer
 
   private _onDispose(): void {
     console.log('[HelloWorldApplicationCustomizer._onDispose] Disposed custom top and bottom placeholders.');
+  }
+
+  private getNavItems() {
+    sp.web.lists.getByTitle('Header Links').items.select('ID, Title, Link').orderBy('Created', false).get().then((result: any[]) => {
+      if (result.length > 0) {
+        let topBarDiv: any = this._topPlaceholder.domElement[1];
+        for (let i = 0; i < result.length; i++) {
+          topBarDiv.innerHtml += `
+          <div class="navitem">
+              <a href="`+ result[i].Link.Url + `" class="navlink">
+              `+ result[i].Title + `
+              </a>
+            </div>`;
+        }
+      }
+    });
   }
 }

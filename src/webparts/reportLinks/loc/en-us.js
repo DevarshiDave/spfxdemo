@@ -1,7 +1,7 @@
 define([], function() {
   return {
-    "PropertyPaneDescription": "Description",
+    "PropertyPaneDescription": "View All",
     "BasicGroupName": "Group Name",
-    "DescriptionFieldLabel": "Description Field"
+    "DescriptionFieldLabel": "View All Report Links?"
   }
 });

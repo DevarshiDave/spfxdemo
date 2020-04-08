@@ -10,12 +10,21 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'WhatWeDoWebPartStrings';
 import WhatWeDo from './components/WhatWeDo';
 import { IWhatWeDoProps } from './components/IWhatWeDoProps';
+import { sp } from '@pnp/sp';
 
 export interface IWhatWeDoWebPartProps {
   description: string;
 }
 
 export default class WhatWeDoWebPart extends BaseClientSideWebPart <IWhatWeDoWebPartProps> {
+
+  protected onInit(): Promise<void> {
+    sp.setup({
+      spfxContext: this.context
+    });
+
+    return super.onInit();
+  }
 
   public render(): void {
     const element: React.ReactElement<IWhatWeDoProps> = React.createElement(
