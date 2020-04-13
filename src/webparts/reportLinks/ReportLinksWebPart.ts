@@ -12,6 +12,7 @@ import * as strings from 'ReportLinksWebPartStrings';
 import ReportLinks from './components/ReportLinks';
 import { IReportLinksProps } from './components/IReportLinksProps';
 import { sp } from "@pnp/sp";
+import * as $ from 'jquery';
 
 export interface IReportLinksWebPartProps {
   viewall: boolean;
@@ -28,7 +29,6 @@ export default class ReportLinksWebPart extends BaseClientSideWebPart <IReportLi
   }
 
   public render(): void {
-    console.log('viewall', this.properties);
     const element: React.ReactElement<IReportLinksProps> = React.createElement(
       ReportLinks,
       {

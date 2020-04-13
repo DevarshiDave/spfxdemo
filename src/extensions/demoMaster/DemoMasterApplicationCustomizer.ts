@@ -11,6 +11,7 @@ require("@pnp/logging");
 require("@pnp/common");
 require("@pnp/odata");
 import { sp } from "@pnp/sp/presets/all";
+import * as $ from 'jquery';
 
 const LOG_SOURCE: string = 'DemoMasterApplicationCustomizer';
 
@@ -37,7 +38,7 @@ export default class DemoMasterApplicationCustomizer
   public onInit(): Promise<void> {
     // Wait for the placeholders to be created (or handle them being changed) and then render.
     this.context.placeholderProvider.changedEvent.add(this, this._renderPlaceHolders);
-    
+
     return Promise.resolve();
   }
 
@@ -69,7 +70,7 @@ export default class DemoMasterApplicationCustomizer
 
       if (this._topPlaceholder.domElement) {
         this._topPlaceholder.domElement.innerHTML = `
-          <div class="topbar">
+          <div id="mycustomheader" class="topbar">
             <div class="logo">
               <a href="https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite">
                 <img src="https://onlinesharepoint2013.sharepoint.com/sites/SPFxDemoSite/Shared%20Documents/logo.jpg" />
@@ -80,12 +81,6 @@ export default class DemoMasterApplicationCustomizer
         this.getNavItems();
       }
     }
-
-    //hide the site header
-    let headers = document.querySelectorAll("[data-sp-feature-instance-id='_Site header host']");
-    headers.forEach((ele) => {
-      ele.classList.add('makeithide');
-    });
   }
 
   private _onDispose(): void {
@@ -93,16 +88,18 @@ export default class DemoMasterApplicationCustomizer
   }
 
   private getNavItems() {
-    sp.web.lists.getByTitle('Header Links').items.select('ID, Title, Link').orderBy('Created', false).get().then((result: any[]) => {
+    //hiding the default site header
+    $('div[data-sp-feature-instance-id="_Site header host"]').addClass('makeithide');
+
+    sp.web.lists.getByTitle('Header Links').items.select('ID, Title, Link').get().then((result: any[]) => {
       if (result.length > 0) {
-        let topBarDiv: any = this._topPlaceholder.domElement[1];
         for (let i = 0; i < result.length; i++) {
-          topBarDiv.innerHtml += `
+          $('#mycustomheader').append(`
           <div class="navitem">
               <a href="`+ result[i].Link.Url + `" class="navlink">
               `+ result[i].Title + `
               </a>
-            </div>`;
+            </div>`);
         }
       }
     });

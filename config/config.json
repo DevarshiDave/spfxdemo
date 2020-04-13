@@ -35,7 +35,9 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "jquery": "https://code.jquery.com/jquery-3.1.0.min.js"
+  },
   "localizedResources": {
     "DemoMasterApplicationCustomizerStrings": "lib/extensions/demoMaster/loc/{locale}.js",
     "ReportLinksWebPartStrings": "lib/webparts/reportLinks/loc/{locale}.js",
